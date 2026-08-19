@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>RAV0C — Mira, Sens & Config | CS2</title>
+<meta name="description" content="Sensibilidade, mira e ajustes de CS2 do rav0cfps. DPI, código de mira e viewmodel, direto do canal.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-950:#0e0d0b;
+    --ink-900:#161410;
+    --ink-800:#211e18;
+    --line:#332f27;
+    --ember:#ff5a1f;
+    --ember-dim:#a83f16;
+    --steel:#6f92a8;
+    --paper:#f2ece1;
+    --paper-dim:#a39c8d;
+    --mono: 'JetBrains Mono', monospace;
+    --disp: 'Rajdhani', sans-serif;
+    --body: 'Inter', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--ink-950);
+    color:var(--paper);
+    font-family:var(--body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  ::selection{background:var(--ember);color:var(--ink-950);}
+
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(14,13,11,.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;height:64px;}
+  .brand{
+    font-family:var(--disp);font-weight:700;font-size:22px;letter-spacing:.04em;
+    display:flex;align-items:center;gap:8px;
+  }
+  .brand .zero{color:var(--ember);}
+  nav.links{display:flex;gap:28px;font-size:14px;font-weight:500;color:var(--paper-dim);}
+  nav.links a{text-decoration:none;transition:color .15s;}
+  nav.links a:hover{color:var(--paper);}
+  .nav-cta{
+    background:var(--ember);color:var(--ink-950);font-family:var(--disp);font-weight:700;
+    font-size:14px;letter-spacing:.03em;padding:9px 18px;text-decoration:none;
+    border:1px solid var(--ember);transition:background .15s,color .15s;
+  }
+  .nav-cta:hover{background:transparent;color:var(--ember);}
+  @media(max-width:760px){nav.links{display:none;}}
+
+  /* ---------- TICKER ---------- */
+  .ticker-outer{border-bottom:1px solid var(--line);background:var(--ink-900);overflow:hidden;}
+  .ticker{display:flex;white-space:nowrap;animation:scroll 32s linear infinite;padding:8px 0;}
+  .ticker span{font-family:var(--mono);font-size:12px;color:var(--paper-dim);padding:0 20px;letter-spacing:.02em;}
+  .ticker span b{color:var(--ember);}
+  @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @media(prefers-reduced-motion:reduce){.ticker{animation:none;}}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;padding:96px 0 72px;overflow:hidden;}
+  .hero::before{
+    content:"";position:absolute;inset:0;z-index:0;
+    background:
+      radial-gradient(ellipse 60% 50% at 80% 0%, rgba(255,90,31,.14), transparent 60%),
+      repeating-linear-gradient(90deg, rgba(255,255,255,.025) 0 1px, transparent 1px 64px);
+  }
+  .hero-inner{position:relative;z-index:1;}
+  .eyebrow{
+    font-family:var(--mono);font-size:12px;color:var(--ember);letter-spacing:.14em;
+    text-transform:uppercase;display:flex;align-items:center;gap:8px;margin-bottom:18px;
+  }
+  .eyebrow::before{content:"";width:8px;height:8px;background:var(--ember);display:inline-block;
+    clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);}
+  h1{
+    font-family:var(--disp);font-weight:700;font-size:clamp(48px,9vw,104px);
+    line-height:.92;margin:0 0 22px;letter-spacing:-.01em;
+  }
+  h1 .out{-webkit-text-stroke:1.5px var(--paper);color:transparent;}
+  .hero p.lead{font-size:18px;color:var(--paper-dim);max-width:480px;margin:0 0 40px;}
+
+  .stat-rail{display:flex;flex-wrap:wrap;gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:36px;}
+  .stat{flex:1 1 120px;padding:18px 20px;border-right:1px solid var(--line);}
+  .stat:last-child{border-right:none;}
+  .stat .n{font-family:var(--disp);font-weight:700;font-size:30px;color:var(--ember);line-height:1;}
+  .stat .l{font-family:var(--mono);font-size:11px;color:var(--paper-dim);text-transform:uppercase;letter-spacing:.08em;margin-top:6px;}
+
+  .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;}
+  .btn{
+    font-family:var(--disp);font-weight:700;font-size:15px;letter-spacing:.02em;
+    padding:14px 26px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+    border:1px solid transparent;transition:transform .12s,background .15s,color .15s;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:var(--paper);color:var(--ink-950);}
+  .btn-primary:hover{background:var(--ember);}
+  .btn-outline{border-color:var(--line);color:var(--paper);}
+  .btn-outline:hover{border-color:var(--paper);}
+
+  /* ---------- SECTION SHELL ---------- */
+  section{padding:88px 0;border-bottom:1px solid var(--line);}
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:44px;flex-wrap:wrap;}
+  .sec-kicker{font-family:var(--mono);font-size:12px;color:var(--steel);text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px;}
+  .sec-title{font-family:var(--disp);font-weight:700;font-size:clamp(30px,4vw,44px);margin:0;letter-spacing:-.01em;}
+  .sec-title em{font-style:normal;color:var(--ember);}
+  .sec-desc{color:var(--paper-dim);max-width:420px;font-size:15px;}
+
+  /* ---------- MIRA / CROSSHAIR BUILDER (signature) ---------- */
+  .mira-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:start;}
+  @media(max-width:860px){.mira-grid{grid-template-columns:1fr;}}
+
+  .ch-preview{
+    background:
+      linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px),
+      var(--ink-900);
+    background-size:28px 28px;
+    border:1px solid var(--line);
+    aspect-ratio:16/10;
+    position:relative;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .ch-preview .corner{position:absolute;width:16px;height:16px;border:2px solid var(--ember-dim);}
+  .ch-preview .corner.tl{top:-1px;left:-1px;border-right:none;border-bottom:none;}
+  .ch-preview .corner.tr{top:-1px;right:-1px;border-left:none;border-bottom:none;}
+  .ch-preview .corner.bl{bottom:-1px;left:-1px;border-right:none;border-top:none;}
+  .ch-preview .corner.br{bottom:-1px;right:-1px;border-left:none;border-top:none;}
+  .ch-tag{position:absolute;top:12px;left:14px;font-family:var(--mono);font-size:11px;color:var(--paper-dim);}
+  #chCanvas{display:block;}
+
+  .stat-list{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);margin-top:20px;border:1px solid var(--line);}
+  .stat-list div{background:var(--ink-950);padding:14px 16px;}
+  .stat-list .k{font-family:var(--mono);font-size:11px;color:var(--paper-dim);text-transform:uppercase;letter-spacing:.06em;}
+  .stat-list .v{font-family:var(--disp);font-weight:700;font-size:20px;margin-top:2px;}
+
+  .code-block{
+    background:var(--ink-900);border:1px solid var(--line);padding:20px;margin-top:24px;
+  }
+  .code-block .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+  .code-block .head span{font-family:var(--mono);font-size:11px;color:var(--paper-dim);text-transform:uppercase;letter-spacing:.08em;}
+  .code-val{font-family:var(--mono);font-size:14px;color:var(--ember);word-break:break-all;}
+  .copy-btn{
+    font-family:var(--mono);font-size:11px;color:var(--paper);background:transparent;
+    border:1px solid var(--line);padding:6px 12px;cursor:pointer;transition:border-color .15s,color .15s;
+  }
+  .copy-btn:hover{border-color:var(--ember);color:var(--ember);}
+  .copy-btn.copied{border-color:var(--ember);color:var(--ember);}
+  .howto{margin-top:22px;font-size:14px;color:var(--paper-dim);}
+  .howto b{color:var(--paper);font-weight:600;}
+
+  .ch-controls{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:20px;}
+  .ch-controls label{font-family:var(--mono);font-size:11px;color:var(--paper-dim);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:6px;}
+  .ch-controls input[type=range]{width:100%;accent-color:var(--ember);}
+  .ch-controls select{
+    width:100%;background:var(--ink-900);border:1px solid var(--line);color:var(--paper);
+    font-family:var(--mono);font-size:12px;padding:8px;
+  }
+
+  /* ---------- CONFIG ---------- */
+  .cfg-box{
+    border:1px solid var(--line);background:var(--ink-900);padding:36px;
+    display:flex;flex-direction:column;align-items:flex-start;gap:16px;
+  }
+  .cfg-box .flag{
+    font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--ink-950);background:var(--steel);padding:4px 10px;
+  }
+  .cfg-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;width:100%;}
+  .cfg-steps li{display:flex;gap:14px;align-items:flex-start;font-size:14px;color:var(--paper-dim);}
+  .cfg-steps .idx{
+    font-family:var(--disp);font-weight:700;color:var(--ember);border:1px solid var(--ember-dim);
+    width:26px;height:26px;flex:none;display:flex;align-items:center;justify-content:center;font-size:13px;
+  }
+  .btn-disabled{background:transparent;border:1px dashed var(--line);color:var(--paper-dim);cursor:not-allowed;}
+
+  /* ---------- AJUSTES ---------- */
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
+  @media(max-width:760px){.grid-3{grid-template-columns:1fr;}}
+  .grid-3 .cell{background:var(--ink-950);padding:22px 20px;}
+  .grid-3 .cell h3{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--steel);margin:0 0 14px;}
+  .kv{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--ink-800);font-size:13.5px;}
+  .kv:last-child{border-bottom:none;}
+  .kv span:first-child{color:var(--paper-dim);}
+  .kv span:last-child{font-family:var(--mono);font-weight:500;}
+
+  /* ---------- SETUP placeholders ---------- */
+  .setup-note{
+    border:1px dashed var(--line);padding:24px;font-size:14px;color:var(--paper-dim);
+  }
+  .setup-note b{color:var(--paper);}
+
+  /* ---------- FAQ ---------- */
+  .faq-item{border-bottom:1px solid var(--line);}
+  .faq-item summary{
+    cursor:pointer;list-style:none;padding:22px 0;display:flex;justify-content:space-between;
+    align-items:center;font-family:var(--disp);font-weight:600;font-size:19px;
+  }
+  .faq-item summary::-webkit-details-marker{display:none;}
+  .faq-item summary::after{content:"+";color:var(--ember);font-size:22px;font-family:var(--body);flex:none;margin-left:16px;}
+  .faq-item[open] summary::after{content:"–";}
+  .faq-item p{margin:0 0 22px;color:var(--paper-dim);font-size:15px;max-width:640px;}
+
+  /* ---------- SOCIAL ---------- */
+  .social-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);}
+  .social-card{
+    background:var(--ink-950);padding:26px;text-decoration:none;color:var(--paper);
+    display:flex;flex-direction:column;gap:6px;transition:background .15s;
+  }
+  .social-card:hover{background:var(--ink-900);}
+  .social-card .plat{font-family:var(--mono);font-size:11px;color:var(--steel);text-transform:uppercase;letter-spacing:.1em;}
+  .social-card .handle{font-family:var(--disp);font-weight:700;font-size:20px;}
+  .social-card .arrow{color:var(--ember);font-family:var(--mono);font-size:13px;margin-top:8px;}
+
+  footer{padding:40px 0;}
+  .foot-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+  .foot-row p{font-size:13px;color:var(--paper-dim);margin:0;}
+  .foot-note{font-size:12px;color:var(--paper-dim);opacity:.6;margin-top:18px;}
+
+  :focus-visible{outline:2px solid var(--ember);outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <div class="brand">RAV<span class="zero">0</span>C</div>
+    <nav class="links">
+      <a href="#mira">Mira &amp; Sens</a>
+      <a href="#config">Config</a>
+      <a href="#ajustes">Ajustes</a>
+      <a href="#setup">Setup</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="nav-cta" href="#mira">Ver mira</a>
+  </div>
+</header>
+
+<div class="ticker-outer">
+  <div class="ticker" id="ticker"></div>
+</div>
+
+<section class="hero">
+  <div class="wrap hero-inner">
+    <div class="eyebrow">Counter-Strike 2</div>
+    <h1>Eu sou o<br><span class="out">RAV0C</span></h1>
+    <p class="lead">Sensibilidade, mira e ajustes direto de quem joga todo dia. Copia meus números, testa na sua conta.</p>
+
+    <div class="stat-rail">
+      <div class="stat"><div class="n">800</div><div class="l">DPI</div></div>
+      <div class="stat"><div class="n">1.5</div><div class="l">Sens</div></div>
+      <div class="stat"><div class="n">1200</div><div class="l">eDPI</div></div>
+      <div class="stat"><div class="n">68</div><div class="l">FOV</div></div>
+      <div class="stat"><div class="n">310</div><div class="l">Hz</div></div>
+    </div>
+
+    <div class="hero-ctas">
+      <a class="btn btn-primary" href="#mira">Ver mira &amp; sens</a>
+      <a class="btn btn-outline" href="https://www.youtube.com/@ravocfps?sub_confirmation=1" target="_blank" rel="noopener">Inscrever-se</a>
+    </div>
+  </div>
+</section>
+
+<!-- MIRA & SENS -->
+<section id="mira">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-kicker">Precisão</div>
+        <h2 class="sec-title">Mira &amp; <em>Sensibilidade</em></h2>
+      </div>
+      <p class="sec-desc">Os números exatos que eu uso. Ajusta a pré-visualização abaixo pra ver como fica o meu crosshair.</p>
+    </div>
+
+    <div class="mira-grid">
+      <div>
+        <div class="ch-preview">
+          <span class="ch-tag">pré-visualização</span>
+          <div class="corner tl"></div><div class="corner tr"></div>
+          <div class="corner bl"></div><div class="corner br"></div>
+          <canvas id="chCanvas" width="480" height="300"></canvas>
+        </div>
+
+        <div class="ch-controls">
+          <div>
+            <label for="chSize">Tamanho</label>
+            <input type="range" id="chSize" min="1" max="6" step="0.1" value="2.4">
+          </div>
+          <div>
+            <label for="chGap">Espaçamento</label>
+            <input type="range" id="chGap" min="-4" max="4" step="0.1" value="-1">
+          </div>
+          <div>
+            <label for="chThick">Espessura</label>
+            <input type="range" id="chThick" min="0.5" max="4" step="0.1" value="1">
+          </div>
+          <div>
+            <label for="chColor">Cor</label>
+            <select id="chColor">
+              <option value="#ff5a1f" selected>Laranja (padrão)</option>
+              <option value="#39ff6a">Verde</option>
+              <option value="#39c9ff">Ciano</option>
+              <option value="#ffffff">Branco</option>
+              <option value="#ff2e2e">Vermelho</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="code-block">
+          <div class="head">
+            <span>Código da mira</span>
+            <button class="copy-btn" data-copy="CSGO-Bre6P-HUmyV-tHxW9-bFyY9-F4nQD">Copiar</button>
+          </div>
+          <div class="code-val">CSGO-Bre6P-HUmyV-tHxW9-bFyY9-F4nQD</div>
+        </div>
+        <p class="howto">Cole em <b>Jogo → Configurações → Mira → Compartilhar ou importar</b>.</p>
+      </div>
+
+      <div>
+        <div class="stat-list">
+          <div><div class="k">DPI</div><div class="v">800</div></div>
+          <div><div class="k">Sensibilidade</div><div class="v">1.5</div></div>
+          <div><div class="k">eDPI</div><div class="v">1200</div></div>
+          <div><div class="k">Viewmodel FOV</div><div class="v">68</div></div>
+          <div><div class="k">Viewmodel offset X</div><div class="v">2.5</div></div>
+          <div><div class="k">Viewmodel offset Y</div><div class="v">0</div></div>
+          <div><div class="k">Viewmodel offset Z</div><div class="v">-2</div></div>
+          <div><div class="k">Taxa de atualização</div><div class="v">310 Hz</div></div>
+        </div>
+        <div class="code-block">
+          <div class="head">
+            <span>Viewmodel — comandos</span>
+            <button class="copy-btn" data-copy="viewmodel_fov 68&#10;viewmodel_offset_x 2.5&#10;viewmodel_offset_y 0&#10;viewmodel_offset_z -2">Copiar</button>
+          </div>
+          <div class="code-val" style="color:var(--paper)">
+            viewmodel_fov 68<br>
+            viewmodel_offset_x 2.5<br>
+            viewmodel_offset_y 0<br>
+            viewmodel_offset_z -2
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONFIG -->
+<section id="config">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-kicker">Arsenal</div>
+        <h2 class="sec-title">Baixe minha <em>config</em></h2>
+      </div>
+      <p class="sec-desc">Autoexec com sensibilidade, mira, viewmodel, radar, HUD e binds — tudo num arquivo só.</p>
+    </div>
+
+    <div class="cfg-box">
+      <span class="flag">Em breve</span>
+      <p style="margin:0;color:var(--paper-dim);font-size:14.5px;max-width:520px;">
+        O <code style="color:var(--ember);font-family:var(--mono);">autoexec.cfg</code> ainda está sendo finalizado.
+        Assim que estiver pronto, o download aparece aqui — por enquanto, usa o código da mira e os comandos de viewmodel acima.
+      </p>
+      <ol class="cfg-steps">
+        <li><span class="idx">1</span> Baixe o arquivo <code style="font-family:var(--mono);color:var(--paper)">autoexec.cfg</code> (não mude o nome dele).</li>
+        <li><span class="idx">2</span> Jogue ele dentro de <code style="font-family:var(--mono);color:var(--paper)">…\Counter-Strike Global Offensive\game\csgo\cfg\</code></li>
+        <li><span class="idx">3</span> Abra o CS2. Ele carrega sozinho, sem precisar de mais nada.</li>
+      </ol>
+      <a class="btn btn-disabled" href="#" aria-disabled="true" onclick="return false;">Config em breve</a>
+    </div>
+  </div>
+</section>
+
+<!-- AJUSTES -->
+<section id="ajustes">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-kicker">Detalhes</div>
+        <h2 class="sec-title">Todos os <em>ajustes</em></h2>
+      </div>
+      <p class="sec-desc">Vídeo, viewmodel e taxa de atualização do jeitinho que fica na minha tela.</p>
+    </div>
+
+    <div class="grid-3">
+      <div class="cell">
+        <h3>Vídeo</h3>
+        <div class="kv"><span>Taxa de atualização</span><span>310 Hz</span></div>
+        <div class="kv"><span>Resolução</span><span>[preencher]</span></div>
+        <div class="kv"><span>Modo de exibição</span><span>[preencher]</span></div>
+        <div class="kv"><span>V-Sync</span><span>[preencher]</span></div>
+      </div>
+      <div class="cell">
+        <h3>Mira &amp; Mouse</h3>
+        <div class="kv"><span>DPI</span><span>800</span></div>
+        <div class="kv"><span>Sensibilidade</span><span>1.5</span></div>
+        <div class="kv"><span>eDPI</span><span>1200</span></div>
+        <div class="kv"><span>Raw Input</span><span>[preencher]</span></div>
+      </div>
+      <div class="cell">
+        <h3>Viewmodel</h3>
+        <div class="kv"><span>FOV</span><span>68</span></div>
+        <div class="kv"><span>Offset X</span><span>2.5</span></div>
+        <div class="kv"><span>Offset Y</span><span>0</span></div>
+        <div class="kv"><span>Offset Z</span><span>-2</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SETUP -->
+<section id="setup">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-kicker">Bancada</div>
+        <h2 class="sec-title">Meu <em>setup</em></h2>
+      </div>
+      <p class="sec-desc">Periféricos e peças do PC.</p>
+    </div>
+    <div class="setup-note">
+      <b>Ainda não temos essa lista.</b> Assim que o ravocfps passar monitor, mouse, teclado, headset e specs do PC,
+      essa seção vira uma grade igual à de Mira &amp; Ajustes acima.
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-kicker">Dúvidas</div>
+        <h2 class="sec-title">Perguntas <em>frequentes</em></h2>
+      </div>
+    </div>
+
+    <details class="faq-item" open>
+      <summary>Qual é a sua sensibilidade no CS2?</summary>
+      <p>800 DPI com 1.5 de sensibilidade in-game (eDPI 1200). Não copia de olho fechado: usa como ponto de partida e ajusta pro seu jeito de jogar.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Como uso o código da sua mira?</summary>
+      <p>Copia o código <code style="font-family:var(--mono);color:var(--ember)">CSGO-Bre6P-HUmyV-tHxW9-bFyY9-F4nQD</code> e cola em Jogo → Configurações → Mira → Compartilhar ou importar.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Onde assisto suas lives?</summary>
+      <p>Ao vivo na <a href="https://www.twitch.tv/ravocfps" target="_blank" rel="noopener" style="color:var(--ember)">Twitch</a>. Vídeos e cortes ficam no YouTube e no TikTok.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Quando saem vídeos novos?</summary>
+      <p>[preencher — dias e horário de postagem/live]</p>
+    </details>
+    <details class="faq-item">
+      <summary>Aceita contato profissional?</summary>
+      <p>[preencher — e-mail ou canal de contato]</p>
+    </details>
+  </div>
+</section>
+
+<!-- SOCIAL -->
+<section id="social" style="border-bottom:none;">
+  <div class="wrap">
+    <div class="sec-head">
+      <div>
+        <div class="sec-kicker">Me segue</div>
+        <h2 class="sec-title">Onde me <em>achar</em></h2>
+      </div>
+    </div>
+    <div class="social-grid">
+      <a class="social-card" href="https://www.twitch.tv/ravocfps" target="_blank" rel="noopener">
+        <span class="plat">Twitch</span>
+        <span class="handle">ravocfps</span>
+        <span class="arrow">assistir ao vivo →</span>
+      </a>
+      <a class="social-card" href="https://www.youtube.com/@ravocfps" target="_blank" rel="noopener">
+        <span class="plat">YouTube</span>
+        <span class="handle">@ravocfps</span>
+        <span class="arrow">ver vídeos →</span>
+      </a>
+      <a class="social-card" href="https://www.tiktok.com/@rav0cfps" target="_blank" rel="noopener">
+        <span class="plat">TikTok</span>
+        <span class="handle">@rav0cfps</span>
+        <span class="arrow">ver cortes →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-row">
+      <div class="brand" style="font-size:17px;">RAV<span class="zero">0</span>C</div>
+      <p>© 2026 — Todos os direitos reservados</p>
+    </div>
+    <p class="foot-note">Não afiliado à Valve Corporation. Counter-Strike é marca da Valve.</p>
+  </div>
+</footer>
+
+<script>
+  // Ticker content
+  const tickerItems = [
+    'DPI <b>800</b> · Sensibilidade <b>1.5</b> · eDPI <b>1200</b>',
+    'Viewmodel FOV <b>68</b>',
+    'Ao vivo na Twitch: <b>twitch.tv/ravocfps</b>',
+    'Vídeos no YouTube: <b>@ravocfps</b>',
+    'Cortes no TikTok: <b>@rav0cfps</b>'
+  ];
+  const tickerEl = document.getElementById('ticker');
+  const build = () => tickerItems.map(t => `<span>${t}</span>`).join('');
+  tickerEl.innerHTML = build() + build();
+
+  // Copy buttons
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const text = btn.getAttribute('data-copy').replace(/&#10;/g, '\n');
+      navigator.clipboard.writeText(text).then(() => {
+        const original = btn.textContent;
+        btn.textContent = 'Copiado!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 1600);
+      });
+    });
+  });
+
+  // Crosshair live preview
+  const canvas = document.getElementById('chCanvas');
+  const ctx = canvas.getContext('2d');
+  const sizeI = document.getElementById('chSize');
+  const gapI = document.getElementById('chGap');
+  const thickI = document.getElementById('chThick');
+  const colorI = document.getElementById('chColor');
+
+  function drawCrosshair(){
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0,0,w,h);
+    const cx = w/2, cy = h/2;
+    const size = parseFloat(sizeI.value) * 8;
+    const gap = parseFloat(gapI.value) * 6;
+    const thick = parseFloat(thickI.value) * 2;
+    const color = colorI.value;
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = thick;
+    ctx.lineCap = 'butt';
+
+    // 4 lines: up, down, left, right
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - gap - size); ctx.lineTo(cx, cy - gap);
+    ctx.moveTo(cx, cy + gap); ctx.lineTo(cx, cy + gap + size);
+    ctx.moveTo(cx - gap - size, cy); ctx.lineTo(cx - gap, cy);
+    ctx.moveTo(cx + gap, cy); ctx.lineTo(cx + gap + size, cy);
+    ctx.stroke();
+  }
+  [sizeI, gapI, thickI, colorI].forEach(el => el.addEventListener('input', drawCrosshair));
+  drawCrosshair();
+</script>
+
+</body>
+</html>
